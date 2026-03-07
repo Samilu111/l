@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
+<!-- ================= META ================= -->
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Control de Horas</title>
+
+<!-- ================= ESTILOS ================= -->
 
 <style>
 
 *{
 box-sizing:border-box;
-max-width:100%;
 font-family:system-ui,-apple-system;
 }
 
 html,body{
 margin:0;
+max-width:100%;
 overflow-x:hidden;
 background:#f4f6fb;
 color:#111;
+transition:.3s;
+line-height:1.4;
 }
 
 .dark{
@@ -27,17 +34,14 @@ background:#0f172a;
 color:white;
 }
 
-/* CONTAINER GENERAL */
-
 .container{
 max-width:1000px;
 margin:auto;
 padding:30px 20px;
 width:100%;
-overflow:hidden;
 }
 
-/* HEADER */
+/* ---------- HEADER ---------- */
 
 .header{
 display:flex;
@@ -46,20 +50,23 @@ align-items:center;
 flex-wrap:wrap;
 gap:15px;
 margin-bottom:25px;
+width:100%;
 }
 
 h1{
 margin:0;
 font-size:24px;
+font-weight:700;
 }
 
 .actions{
 display:flex;
 gap:10px;
 flex-wrap:wrap;
+align-items:center;
 }
 
-/* BOTONES */
+/* ---------- BOTONES ---------- */
 
 button{
 padding:12px 16px;
@@ -67,6 +74,12 @@ border:none;
 border-radius:10px;
 cursor:pointer;
 font-weight:600;
+font-size:14px;
+transition:.2s;
+}
+
+button:hover{
+opacity:.9;
 }
 
 .primary{
@@ -88,7 +101,7 @@ background:#334155;
 color:white;
 }
 
-/* TARJETAS */
+/* ---------- TARJETAS ---------- */
 
 .card{
 background:white;
@@ -96,17 +109,13 @@ padding:22px;
 border-radius:14px;
 box-shadow:0 10px 25px rgba(0,0,0,0.08);
 margin-bottom:25px;
-
-width:100%;
-max-width:100%;
-overflow:hidden;
 }
 
 .dark .card{
 background:#1e293b;
 }
 
-/* INPUTS */
+/* ---------- INPUTS ---------- */
 
 label{
 font-weight:600;
@@ -117,30 +126,29 @@ margin-bottom:4px;
 
 input{
 width:100%;
-max-width:100%;
 padding:14px;
 border-radius:10px;
 border:1px solid #ccc;
 margin-bottom:12px;
 font-size:16px;
-display:block;
 }
 
-/* GRID */
+/* ---------- GRID FORM ---------- */
 
 .grid{
 display:grid;
-grid-template-columns:repeat(3,minmax(0,1fr));
+grid-template-columns:repeat(3,1fr);
 gap:12px;
 margin-bottom:10px;
-width:100%;
 }
 
-/* TABLA */
+/* ---------- TABLA ---------- */
 
 .table-wrap{
 width:100%;
 overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+margin-top:10px;
 }
 
 table{
@@ -150,7 +158,7 @@ border-collapse:collapse;
 }
 
 th,td{
-padding:10px;
+padding:12px;
 border-bottom:1px solid #ddd;
 text-align:center;
 font-size:14px;
@@ -162,6 +170,7 @@ border-bottom:1px solid #334155;
 
 th{
 background:#f1f5f9;
+font-weight:600;
 }
 
 .dark th{
@@ -172,9 +181,10 @@ background:#334155;
 text-align:right;
 font-weight:700;
 margin-top:15px;
+font-size:16px;
 }
 
-/* LOGIN */
+/* ---------- LOGIN ---------- */
 
 .center{
 max-width:420px;
@@ -189,9 +199,19 @@ cursor:pointer;
 font-weight:600;
 }
 
-/* RESPONSIVE */
+h2{
+margin-top:0;
+margin-bottom:15px;
+}
 
-@media(max-width:700px){
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width:700px){
+
+.header{
+flex-direction:column;
+align-items:flex-start;
+}
 
 .grid{
 grid-template-columns:1fr;
@@ -209,7 +229,7 @@ width:100%;
 
 <body>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
 
 <div id="loginScreen" class="card center">
 
@@ -230,7 +250,7 @@ width:100%;
 </div>
 
 
-<!-- REGISTRO -->
+<!-- ================= REGISTRO ================= -->
 
 <div id="registerScreen" class="card center" style="display:none">
 
@@ -251,11 +271,13 @@ width:100%;
 </div>
 
 
-<!-- APP -->
+<!-- ================= APLICACIÓN ================= -->
 
 <div id="app" style="display:none">
 
 <div class="container">
+
+<!-- HEADER -->
 
 <div class="header">
 
@@ -276,6 +298,8 @@ width:100%;
 </div>
 
 
+<!-- ================= CARGA DE HORAS ================= -->
+
 <div class="card">
 
 <h3>Cargar horas</h3>
@@ -288,27 +312,29 @@ width:100%;
 </div>
 
 <div>
-<label>Ingreso</label>
+<label>Hora de ingreso</label>
 <input type="time" id="ingreso">
 </div>
 
 <div>
-<label>Egreso</label>
+<label>Hora de egreso</label>
 <input type="time" id="egreso">
 </div>
 
 </div>
 
-<button class="primary" onclick="guardar()">Guardar</button>
+<button class="primary" onclick="guardar()">Guardar registro</button>
 
 </div>
 
 
+<!-- ================= REGISTROS ================= -->
+
 <div class="card">
 
-<h3>Registros</h3>
+<h3>Registros por mes</h3>
 
-<label>Mes</label>
+<label>Seleccionar mes</label>
 <input type="month" id="selectorMes" onchange="mostrar()">
 
 <div class="table-wrap">
@@ -321,7 +347,7 @@ width:100%;
 <th>Ingreso</th>
 <th>Egreso</th>
 <th>Horas</th>
-<th></th>
+<th>Acción</th>
 </tr>
 </thead>
 
@@ -332,7 +358,7 @@ width:100%;
 </div>
 
 <div class="total">
-Total Horas: <span id="totalMes">0h 0m</span>
+Total del mes: <span id="totalMes">0h 0m</span>
 </div>
 
 </div>
@@ -340,8 +366,12 @@ Total Horas: <span id="totalMes">0h 0m</span>
 </div>
 
 </div>
+
+<!-- ================= JAVASCRIPT ================= -->
 
 <script>
+
+/* ---------- BASE DE DATOS LOCAL ---------- */
 
 let registros=JSON.parse(localStorage.getItem("registros"))||[]
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
@@ -350,9 +380,13 @@ let usuario=null
 let hoy=new Date()
 let mesActual=hoy.toISOString().slice(0,7)
 
+/* ---------- FUNCIONES GENERALES ---------- */
+
 function cap(t){
 return t.charAt(0).toUpperCase()+t.slice(1).toLowerCase()
 }
+
+/* ---------- CAMBIO LOGIN / REGISTRO ---------- */
 
 function mostrarRegistro(){
 loginScreen.style.display="none"
@@ -363,6 +397,8 @@ function mostrarLogin(){
 registerScreen.style.display="none"
 loginScreen.style.display="block"
 }
+
+/* ---------- REGISTRAR USUARIO ---------- */
 
 function registrar(){
 
@@ -391,6 +427,8 @@ mostrarLogin()
 
 }
 
+/* ---------- LOGIN ---------- */
+
 function login(){
 
 let n=cap(loginNombre.value.trim())
@@ -411,6 +449,8 @@ iniciar()
 
 }
 
+/* ---------- INICIAR APP ---------- */
+
 function iniciar(){
 
 usuario=localStorage.getItem("sesion")
@@ -423,21 +463,27 @@ app.style.display="block"
 
 selectorMes.value=mesActual
 
-usuarioTexto.innerText=usuario
+document.getElementById("usuario").innerText="Usuario: "+usuario
 
 mostrar()
 
 }
+
+/* ---------- CERRAR SESIÓN ---------- */
 
 function logout(){
 localStorage.removeItem("sesion")
 location.reload()
 }
 
+/* ---------- CALCULO MINUTOS ---------- */
+
 function minutos(h){
 let p=h.split(":")
 return p[0]*60+parseInt(p[1])
 }
+
+/* ---------- GUARDAR REGISTRO ---------- */
 
 function guardar(){
 
@@ -461,9 +507,15 @@ registros.push({usuario,f,i,e,h,m})
 
 localStorage.setItem("registros",JSON.stringify(registros))
 
+fecha.value=""
+ingreso.value=""
+egreso.value=""
+
 mostrar()
 
 }
+
+/* ---------- BORRAR REGISTRO ---------- */
 
 function borrar(i){
 
@@ -474,6 +526,8 @@ localStorage.setItem("registros",JSON.stringify(registros))
 mostrar()
 
 }
+
+/* ---------- MOSTRAR TABLA ---------- */
 
 function mostrar(){
 
@@ -514,9 +568,11 @@ totalMes.innerText=th+"h "+tm+"m"
 
 }
 
+/* ---------- BORRAR PERFIL ---------- */
+
 function borrarPerfil(){
 
-if(confirm("¿Eliminar tu cuenta y registros?")){
+if(confirm("¿Seguro que querés eliminar tu cuenta?\nSe borrarán todos tus registros.")){
 
 usuarios=usuarios.filter(u=>u!==usuario)
 registros=registros.filter(r=>r.usuario!==usuario)
@@ -529,6 +585,8 @@ logout()
 }
 
 }
+
+/* ---------- MODO OSCURO ---------- */
 
 function toggleDark(){
 
