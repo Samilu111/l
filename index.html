@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Horas</title>
+
+<style>
+
+*{box-sizing:border-box;font-family:system-ui}
+
+body{
+margin:0;
+background:#f4f6fb;
+color:#111;
+transition:.3s;
+}
+
+.dark{background:#0f172a;color:white}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+align-items:center;
+margin-bottom:20px;
+gap:10px;
+}
+
+h1{margin:0;font-size:22px}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+button{
+padding:8px 14px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+}
+
+.primary{background:#4f46e5;color:white}
+.secondary{background:#e5e7eb}
+.danger{background:#ef4444;color:white}
+
+.dark .secondary{background:#334155;color:white}
+
+.card{
+background:white;
+padding:18px;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+margin-bottom:20px;
+}
+
+.dark .card{background:#1e293b}
+
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+margin-bottom:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
+
+.table-wrap{overflow:auto}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:500px;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+.dark th,.dark td{border-bottom:1px solid #334155}
+
+th{background:#f1f5f9}
+
+.dark th{background:#334155}
+
+.total{
+text-align:right;
+font-weight:700;
+margin-top:10px;
+}
+
+.center{
+max-width:380px;
+margin:auto;
+margin-top:120px;
+}
+
+.link{
+color:#4f46e5;
+cursor:pointer;
+font-weight:600;
+}
+
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginScreen" class="card center">
+
+<h2>Iniciar sesión</h2>
+
+<input id="loginNombre" placeholder="Nombre">
+<input id="loginApellido" placeholder="Apellido">
+
+<button class="primary" onclick="login()">Entrar</button>
+
+<p>No tenés cuenta? <span class="link" onclick="mostrarRegistro()">Registrarse</span></p>
+
+</div>
+
+<!-- REGISTRO -->
+
+<div id="registerScreen" class="card center" style="display:none">
+
+<h2>Crear cuenta</h2>
+
+<input id="regNombre" placeholder="Nombre">
+<input id="regApellido" placeholder="Apellido">
+
+<button class="primary" onclick="registrar()">Registrarse</button>
+
+<p>¿Ya tenés cuenta? <span class="link" onclick="mostrarLogin()">Iniciar sesión</span></p>
+
+</div>
+
+<!-- APP -->
+
+<div id="app" style="display:none">
+
+<div class="container">
+
+<div class="header">
+
+<h1>Control de Horas</h1>
+
+<div class="actions">
+
+<span id="usuario"></span>
+
+<button class="secondary" onclick="toggleDark()">Modo</button> <button class="secondary" onclick="borrarPerfil()">Borrar Perfil</button> <button class="danger" onclick="logout()">Salir</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<input type="date" id="fecha">
+<input type="time" id="ingreso">
+<input type="time" id="egreso">
+
+</div>
+
+<button class="primary" onclick="guardar()">Guardar</button>
+
+</div>
+
+<div class="card">
+
+<h3>Registros</h3>
+
+<input type="month" id="selectorMes" onchange="mostrar()">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Ingreso</th>
+<th>Egreso</th>
+<th>Horas</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+
+<div class="total">
+Total Horas: <span id="totalMes">0h 0m</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let registros=JSON.parse(localStorage.getItem("registros"))||[]
+let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
+let usuario=null
+
+let hoy=new Date()
+let mesActual=hoy.toISOString().slice(0,7)
+
+function cap(t){
+return t.charAt(0).toUpperCase()+t.slice(1).toLowerCase()
+}
+
+function mostrarRegistro(){
+loginScreen.style.display="none"
+registerScreen.style.display="block"
+}
+
+function mostrarLogin(){
+registerScreen.style.display="none"
+loginScreen.style.display="block"
+}
+
+function registrar(){
+
+let n=cap(regNombre.value.trim())
+let a=cap(regApellido.value.trim())
+
+if(!n||!a){
+alert("Completar datos")
+return
+}
+
+let nombre=n+" "+a
+
+if(usuarios.includes(nombre)){
+alert("Ese usuario ya existe")
+return
+}
+
+usuarios.push(nombre)
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+
+alert("Cuenta creada")
+
+mostrarLogin()
+
+}
+
+function login(){
+
+let n=cap(loginNombre.value.trim())
+let a=cap(loginApellido.value.trim())
+
+let nombre=n+" "+a
+
+if(!usuarios.includes(nombre)){
+alert("Usuario no registrado")
+return
+}
+
+usuario=nombre
+
+localStorage.setItem("sesion",usuario)
+
+iniciar()
+
+}
+
+function iniciar(){
+
+usuario=localStorage.getItem("sesion")
+
+if(!usuario)return
+
+loginScreen.style.display="none"
+registerScreen.style.display="none"
+app.style.display="block"
+
+selectorMes.value=mesActual
+
+usuarioLabel()
+
+mostrar()
+
+}
+
+function usuarioLabel(){
+document.getElementById("usuario").innerText=usuario
+}
+
+function logout(){
+localStorage.removeItem("sesion")
+location.reload()
+}
+
+function minutos(h){
+let p=h.split(":")
+return p[0]*60+parseInt(p[1])
+}
+
+function guardar(){
+
+let f=fecha.value
+let i=ingreso.value
+let e=egreso.value
+
+if(!f||!i||!e){
+alert("Completar datos")
+return
+}
+
+let diff=minutos(e)-minutos(i)
+
+if(diff<0) diff+=1440
+
+let h=Math.floor(diff/60)
+let m=diff%60
+
+registros.push({usuario,f,i,e,h,m})
+
+localStorage.setItem("registros",JSON.stringify(registros))
+
+fecha.value=""
+ingreso.value=""
+egreso.value=""
+
+mostrar()
+
+}
+
+function borrar(i){
+
+registros.splice(i,1)
+
+localStorage.setItem("registros",JSON.stringify(registros))
+
+mostrar()
+
+}
+
+function mostrar(){
+
+tabla.innerHTML=""
+
+let total=0
+
+let mesSeleccionado=selectorMes.value
+
+registros.forEach((r,i)=>{
+
+if(r.usuario!==usuario)return
+
+let mesRegistro=r.f.slice(0,7)
+
+if(mesRegistro!==mesSeleccionado)return
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=`
+<td>${r.f}</td>
+<td>${r.i}</td>
+<td>${r.e}</td>
+<td>${r.h}h ${r.m}m</td>
+<td><button class="danger" onclick="borrar(${i})">Borrar</button></td>
+`
+
+tabla.appendChild(tr)
+
+total+=r.h*60+r.m
+
+})
+
+let th=Math.floor(total/60)
+let tm=total%60
+
+totalMes.innerText=th+"h "+tm+"m"
+
+}
+
+function borrarPerfil(){
+
+if(confirm("¿Seguro que querés eliminar tu cuenta?\nEsta acción borrará todos tus registros.")){
+
+usuarios=usuarios.filter(u=>u!==usuario)
+
+registros=registros.filter(r=>r.usuario!==usuario)
+
+localStorage.setItem("usuarios",JSON.stringify(usuarios))
+localStorage.setItem("registros",JSON.stringify(registros))
+
+logout()
+
+}
+
+}
+
+function toggleDark(){
+
+document.body.classList.toggle("dark")
+
+localStorage.setItem("dark",document.body.classList.contains("dark"))
+
+}
+
+if(localStorage.getItem("dark")=="true"){
+document.body.classList.add("dark")
+}
+
+iniciar()
+
+</script>
+
+</body>
+</html>
