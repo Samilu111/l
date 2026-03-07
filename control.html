@@ -14,8 +14,10 @@ box-sizing:border-box;
 font-family:system-ui,-apple-system;
 }
 
-body{
+html,body{
 margin:0;
+max-width:100%;
+overflow-x:hidden;
 background:#f4f6fb;
 color:#111;
 transition:.3s;
@@ -31,6 +33,7 @@ color:white;
 max-width:1000px;
 margin:auto;
 padding:30px 20px;
+width:100%;
 }
 
 .header{
@@ -40,6 +43,7 @@ align-items:center;
 flex-wrap:wrap;
 gap:15px;
 margin-bottom:25px;
+width:100%;
 }
 
 h1{
@@ -106,7 +110,7 @@ padding:14px;
 border-radius:10px;
 border:1px solid #ccc;
 margin-bottom:12px;
-font-size:16px; /* evita zoom en iPhone */
+font-size:16px;
 }
 
 .grid{
@@ -117,12 +121,15 @@ margin-bottom:10px;
 }
 
 .table-wrap{
+width:100%;
 overflow-x:auto;
+-webkit-overflow-scrolling:touch;
 margin-top:10px;
 }
 
 table{
 width:100%;
+min-width:450px;
 border-collapse:collapse;
 }
 
@@ -228,7 +235,8 @@ font-size:13px;
 }
 
 th,td{
-padding:8px;
+padding:6px;
+font-size:13px;
 }
 
 .total{
