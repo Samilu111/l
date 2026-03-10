@@ -3,10 +3,14 @@
 
 <head>
 
+<!-- ================= META ================= -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Control de Horas</title>
+
+<!-- ================= ESTILOS ================= -->
 
 <style>
 
@@ -37,6 +41,8 @@ padding:30px 20px;
 width:100%;
 }
 
+/* ---------- HEADER ---------- */
+
 .header{
 display:flex;
 justify-content:space-between;
@@ -60,6 +66,8 @@ flex-wrap:wrap;
 align-items:center;
 }
 
+/* ---------- BOTONES ---------- */
+
 button{
 padding:12px 16px;
 border:none;
@@ -68,6 +76,10 @@ cursor:pointer;
 font-weight:600;
 font-size:14px;
 transition:.2s;
+}
+
+button:hover{
+opacity:.9;
 }
 
 .primary{
@@ -84,6 +96,13 @@ background:#ef4444;
 color:white;
 }
 
+.dark .secondary{
+background:#334155;
+color:white;
+}
+
+/* ---------- TARJETAS ---------- */
+
 .card{
 background:white;
 padding:22px;
@@ -95,6 +114,8 @@ margin-bottom:25px;
 .dark .card{
 background:#1e293b;
 }
+
+/* ---------- INPUTS ---------- */
 
 label{
 font-weight:600;
@@ -112,6 +133,8 @@ margin-bottom:12px;
 font-size:16px;
 }
 
+/* ---------- GRID FORM ---------- */
+
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -119,13 +142,18 @@ gap:12px;
 margin-bottom:10px;
 }
 
+/* ---------- TABLA ---------- */
+
 .table-wrap{
 width:100%;
 overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+margin-top:10px;
 }
 
 table{
 width:100%;
+min-width:450px;
 border-collapse:collapse;
 }
 
@@ -136,9 +164,17 @@ text-align:center;
 font-size:14px;
 }
 
+.dark th,.dark td{
+border-bottom:1px solid #334155;
+}
+
 th{
 background:#f1f5f9;
 font-weight:600;
+}
+
+.dark th{
+background:#334155;
 }
 
 .total{
@@ -147,6 +183,8 @@ font-weight:700;
 margin-top:15px;
 font-size:16px;
 }
+
+/* ---------- LOGIN ---------- */
 
 .center{
 max-width:420px;
@@ -160,6 +198,13 @@ color:#4f46e5;
 cursor:pointer;
 font-weight:600;
 }
+
+h2{
+margin-top:0;
+margin-bottom:15px;
+}
+
+/* ---------- RESPONSIVE ---------- */
 
 @media (max-width:700px){
 
@@ -178,63 +223,13 @@ width:100%;
 
 }
 
-/* ===== PDF ===== */
-
-#pdfArea{
-display:none;
-padding:40px;
-font-family:Arial;
-}
-
-#pdfArea h2{
-text-align:center;
-margin-bottom:30px;
-}
-
-#pdfTabla{
-width:100%;
-border-collapse:collapse;
-}
-
-#pdfTabla th,
-#pdfTabla td{
-border:1px solid black;
-padding:10px;
-text-align:center;
-}
-
-#pdfTotal{
-margin-top:25px;
-text-align:right;
-font-weight:bold;
-font-size:18px;
-}
-
-@media print{
-
-body *{
-visibility:hidden;
-}
-
-#pdfArea,
-#pdfArea *{
-visibility:visible;
-}
-
-#pdfArea{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-}
-
-}
-
 </style>
 
 </head>
 
 <body>
+
+<!-- ================= LOGIN ================= -->
 
 <div id="loginScreen" class="card center">
 
@@ -254,6 +249,9 @@ width:100%;
 
 </div>
 
+
+<!-- ================= REGISTRO ================= -->
+
 <div id="registerScreen" class="card center" style="display:none">
 
 <h2>Crear cuenta</h2>
@@ -272,9 +270,14 @@ width:100%;
 
 </div>
 
+
+<!-- ================= APLICACIÓN ================= -->
+
 <div id="app" style="display:none">
 
 <div class="container">
+
+<!-- HEADER -->
 
 <div class="header">
 
@@ -285,12 +288,17 @@ width:100%;
 <span id="usuario"></span>
 
 <button class="secondary" onclick="toggleDark()">Modo</button>
+
 <button class="secondary" onclick="borrarPerfil()">Borrar Perfil</button>
+
 <button class="danger" onclick="logout()">Salir</button>
 
 </div>
 
 </div>
+
+
+<!-- ================= CARGA DE HORAS ================= -->
 
 <div class="card">
 
@@ -304,12 +312,12 @@ width:100%;
 </div>
 
 <div>
-<label>Hora ingreso</label>
+<label>Hora de ingreso</label>
 <input type="time" id="ingreso">
 </div>
 
 <div>
-<label>Hora egreso</label>
+<label>Hora de egreso</label>
 <input type="time" id="egreso">
 </div>
 
@@ -318,6 +326,9 @@ width:100%;
 <button class="primary" onclick="guardar()">Guardar registro</button>
 
 </div>
+
+
+<!-- ================= REGISTROS ================= -->
 
 <div class="card">
 
@@ -350,39 +361,17 @@ width:100%;
 Total del mes: <span id="totalMes">0h 0m</span>
 </div>
 
-<button class="primary" onclick="generarPDF()">Exportar PDF del mes</button>
-
 </div>
 
 </div>
 
 </div>
 
-<!-- AREA PDF -->
-
-<div id="pdfArea">
-
-<h2 id="pdfMes"></h2>
-
-<table id="pdfTabla">
-
-<thead>
-<tr>
-<th>Fecha</th>
-<th>Ingreso</th>
-<th>Egreso</th>
-</tr>
-</thead>
-
-<tbody></tbody>
-
-</table>
-
-<div id="pdfTotal"></div>
-
-</div>
+<!-- ================= JAVASCRIPT ================= -->
 
 <script>
+
+/* ---------- BASE DE DATOS LOCAL ---------- */
 
 let registros=JSON.parse(localStorage.getItem("registros"))||[]
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
@@ -391,9 +380,13 @@ let usuario=null
 let hoy=new Date()
 let mesActual=hoy.toISOString().slice(0,7)
 
+/* ---------- FUNCIONES GENERALES ---------- */
+
 function cap(t){
 return t.charAt(0).toUpperCase()+t.slice(1).toLowerCase()
 }
+
+/* ---------- CAMBIO LOGIN / REGISTRO ---------- */
 
 function mostrarRegistro(){
 loginScreen.style.display="none"
@@ -404,6 +397,8 @@ function mostrarLogin(){
 registerScreen.style.display="none"
 loginScreen.style.display="block"
 }
+
+/* ---------- REGISTRAR USUARIO ---------- */
 
 function registrar(){
 
@@ -432,6 +427,8 @@ mostrarLogin()
 
 }
 
+/* ---------- LOGIN ---------- */
+
 function login(){
 
 let n=cap(loginNombre.value.trim())
@@ -452,6 +449,8 @@ iniciar()
 
 }
 
+/* ---------- INICIAR APP ---------- */
+
 function iniciar(){
 
 usuario=localStorage.getItem("sesion")
@@ -470,15 +469,21 @@ mostrar()
 
 }
 
+/* ---------- CERRAR SESIÓN ---------- */
+
 function logout(){
 localStorage.removeItem("sesion")
 location.reload()
 }
 
+/* ---------- CALCULO MINUTOS ---------- */
+
 function minutos(h){
 let p=h.split(":")
 return p[0]*60+parseInt(p[1])
 }
+
+/* ---------- GUARDAR REGISTRO ---------- */
 
 function guardar(){
 
@@ -510,6 +515,8 @@ mostrar()
 
 }
 
+/* ---------- BORRAR REGISTRO ---------- */
+
 function borrar(i){
 
 registros.splice(i,1)
@@ -520,17 +527,23 @@ mostrar()
 
 }
 
+/* ---------- MOSTRAR TABLA ---------- */
+
 function mostrar(){
 
 tabla.innerHTML=""
 
 let total=0
+
 let mesSeleccionado=selectorMes.value
 
 registros.forEach((r,i)=>{
 
 if(r.usuario!==usuario)return
-if(r.f.slice(0,7)!==mesSeleccionado)return
+
+let mesRegistro=r.f.slice(0,7)
+
+if(mesRegistro!==mesSeleccionado)return
 
 let tr=document.createElement("tr")
 
@@ -555,60 +568,11 @@ totalMes.innerText=th+"h "+tm+"m"
 
 }
 
-/* PDF */
-
-function generarPDF(){
-
-let mes=selectorMes.value
-
-if(!mes){
-alert("Seleccioná un mes")
-return
-}
-
-let fecha=new Date(mes+"-01")
-
-let nombreMes=fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
-
-pdfMes.innerText="Historial de horas - "+nombreMes
-
-let cuerpo=document.querySelector("#pdfTabla tbody")
-
-cuerpo.innerHTML=""
-
-let total=0
-
-registros.forEach(r=>{
-
-if(r.usuario!==usuario)return
-if(r.f.slice(0,7)!==mes)return
-
-let tr=document.createElement("tr")
-
-tr.innerHTML=`
-<td>${r.f}</td>
-<td>${r.i}</td>
-<td>${r.e}</td>
-`
-
-cuerpo.appendChild(tr)
-
-total+=r.h*60+r.m
-
-})
-
-let h=Math.floor(total/60)
-let m=total%60
-
-pdfTotal.innerText="Total del mes: "+h+"h "+m+"m"
-
-window.print()
-
-}
+/* ---------- BORRAR PERFIL ---------- */
 
 function borrarPerfil(){
 
-if(confirm("¿Seguro que querés eliminar tu cuenta?")){
+if(confirm("¿Seguro que querés eliminar tu cuenta?\nSe borrarán todos tus registros.")){
 
 usuarios=usuarios.filter(u=>u!==usuario)
 registros=registros.filter(r=>r.usuario!==usuario)
@@ -621,6 +585,8 @@ logout()
 }
 
 }
+
+/* ---------- MODO OSCURO ---------- */
 
 function toggleDark(){
 
