@@ -546,6 +546,19 @@ datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
 let wb = XLSX.utils.book_new()
 let ws = XLSX.utils.aoa_to_sheet(datos)
 
+/* unir celdas */
+
+ws["!merges"] = [
+
+{ s:{r:0,c:0}, e:{r:0,c:3} }, 
+{ s:{r:2,c:1}, e:{r:2,c:3} }, 
+{ s:{r:3,c:1}, e:{r:3,c:3} }, 
+{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
+
+]
+
+/* ancho columnas */
+
 ws["!cols"] = [
 {wch:18},
 {wch:12},
