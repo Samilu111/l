@@ -1,84 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control de Horas</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:system-ui,-apple-system;
-}
+*{box-sizing:border-box;font-family:system-ui}
 
-html,body{
+body{
 margin:0;
-max-width:100%;
-overflow-x:hidden;
 background:#f4f6fb;
 color:#111;
+transition:.3s;
 }
 
+.dark{background:#0f172a;color:white}
+
 .container{
-max-width:1000px;
+max-width:900px;
 margin:auto;
-padding:30px 20px;
+padding:20px;
 }
 
 .header{
 display:flex;
 justify-content:space-between;
-align-items:center;
 flex-wrap:wrap;
-gap:15px;
-margin-bottom:25px;
+align-items:center;
+margin-bottom:20px;
+gap:10px;
 }
 
+h1{margin:0;font-size:22px}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
 button{
-padding:12px 16px;
+padding:8px 14px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 cursor:pointer;
 font-weight:600;
 }
 
-.primary{background:#4f46e5;color:white;}
-.secondary{background:#e5e7eb;}
-.danger{background:#ef4444;color:white;}
+.primary{background:#4f46e5;color:white}
+.secondary{background:#e5e7eb}
+.danger{background:#ef4444;color:white}
+
+.dark .secondary{background:#334155;color:white}
 
 .card{
 background:white;
-padding:22px;
-border-radius:14px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
-margin-bottom:25px;
+padding:18px;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+margin-bottom:20px;
+}
+
+.dark .card{background:#1e293b}
+
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+margin-bottom:10px;
 }
 
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:12px;
+gap:10px;
 }
 
-input{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-bottom:10px;
-}
-
-.table-wrap{
-overflow-x:auto;
-}
+.table-wrap{overflow:auto}
 
 table{
 width:100%;
 border-collapse:collapse;
+min-width:500px;
 }
 
 th,td{
@@ -87,30 +89,58 @@ border-bottom:1px solid #ddd;
 text-align:center;
 }
 
-th{
-background:#f1f5f9;
-}
+.dark th,.dark td{border-bottom:1px solid #334155}
+
+th{background:#f1f5f9}
+
+.dark th{background:#334155}
 
 .total{
 text-align:right;
-font-weight:bold;
+font-weight:700;
 margin-top:10px;
 }
 
-/* NO IMPRIMIR ACCIONES */
+.center{
+max-width:380px;
+margin:auto;
+margin-top:120px;
+}
+
+.link{
+color:#4f46e5;
+cursor:pointer;
+font-weight:600;
+}
+
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+}
+
+/* ---- IMPRESION SOLO REGISTROS ---- */
+
+.no-print{display:block}
 
 @media print{
 
+body *{
+visibility:hidden;
+}
+
+.imprimir,
+.imprimir *{
+visibility:visible;
+}
+
+.imprimir{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+}
+
 .no-print{
 display:none;
-}
-
-body{
-background:white;
-}
-
-table{
-font-size:14px;
 }
 
 }
@@ -121,7 +151,9 @@ font-size:14px;
 
 <body>
 
-<div id="loginScreen" class="card" style="max-width:400px;margin:100px auto">
+<!-- LOGIN -->
+
+<div id="loginScreen" class="card center">
 
 <h2>Iniciar sesión</h2>
 
@@ -130,14 +162,13 @@ font-size:14px;
 
 <button class="primary" onclick="login()">Entrar</button>
 
-<p>No tenés cuenta?
-<span onclick="mostrarRegistro()" style="color:blue;cursor:pointer">Registrarse</span>
-</p>
+<p>No tenés cuenta? <span class="link" onclick="mostrarRegistro()">Registrarse</span></p>
 
 </div>
 
+<!-- REGISTRO -->
 
-<div id="registerScreen" class="card" style="display:none;max-width:400px;margin:100px auto">
+<div id="registerScreen" class="card center" style="display:none">
 
 <h2>Crear cuenta</h2>
 
@@ -146,12 +177,11 @@ font-size:14px;
 
 <button class="primary" onclick="registrar()">Registrarse</button>
 
-<p>¿Ya tenés cuenta?
-<span onclick="mostrarLogin()" style="color:blue;cursor:pointer">Iniciar sesión</span>
-</p>
+<p>¿Ya tenés cuenta? <span class="link" onclick="mostrarLogin()">Iniciar sesión</span></p>
 
 </div>
 
+<!-- APP -->
 
 <div id="app" style="display:none">
 
@@ -161,21 +191,19 @@ font-size:14px;
 
 <h1>Control de Horas</h1>
 
-<div>
+<div class="actions">
 
 <span id="usuario"></span>
 
-<button class="secondary" onclick="borrarPerfil()">Borrar perfil</button>
-<button class="danger" onclick="logout()">Salir</button>
+<button class="secondary no-print" onclick="toggleDark()">Modo</button>
+<button class="secondary no-print" onclick="borrarPerfil()">Borrar Perfil</button>
+<button class="danger no-print" onclick="logout()">Salir</button>
 
 </div>
 
 </div>
 
-
-<div class="card">
-
-<h3>Cargar horas</h3>
+<div class="card no-print">
 
 <div class="grid">
 
@@ -185,31 +213,28 @@ font-size:14px;
 
 </div>
 
-<button class="primary" onclick="guardar()">Guardar registro</button>
+<button class="primary" onclick="guardar()">Guardar</button>
 
 </div>
 
+<div class="card imprimir">
 
-<div class="card">
+<h3>Registros</h3>
 
-<h3>Registros por mes</h3>
-
-<input type="month" id="selectorMes" onchange="mostrar()">
+<input type="month" id="selectorMes" onchange="mostrar()" class="no-print">
 
 <div class="table-wrap">
 
-<table id="tablaPDF">
+<table>
 
 <thead>
-
 <tr>
 <th>Fecha</th>
 <th>Ingreso</th>
 <th>Egreso</th>
 <th>Horas</th>
-<th class="no-print">Acción</th>
+<th class="no-print"></th>
 </tr>
-
 </thead>
 
 <tbody id="tabla"></tbody>
@@ -219,22 +244,16 @@ font-size:14px;
 </div>
 
 <div class="total">
-Total del mes: <span id="totalMes">0h 0m</span>
+Total Horas: <span id="totalMes">0h 0m</span>
 </div>
 
-<br>
-
-<button class="primary no-print" onclick="exportarExcel()">Exportar Excel</button>
-
-<button class="primary no-print" onclick="imprimirPDF()">Exportar PDF</button>
+<button class="primary no-print" onclick="imprimir()">Imprimir mes / PDF</button>
 
 </div>
 
 </div>
 
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
 
@@ -264,11 +283,17 @@ function registrar(){
 let n=cap(regNombre.value.trim())
 let a=cap(regApellido.value.trim())
 
-if(!n||!a)return alert("Completar datos")
+if(!n||!a){
+alert("Completar datos")
+return
+}
 
 let nombre=n+" "+a
 
-if(usuarios.includes(nombre))return alert("Usuario existe")
+if(usuarios.includes(nombre)){
+alert("Ese usuario ya existe")
+return
+}
 
 usuarios.push(nombre)
 
@@ -287,7 +312,10 @@ let a=cap(loginApellido.value.trim())
 
 let nombre=n+" "+a
 
-if(!usuarios.includes(nombre))return alert("Usuario no registrado")
+if(!usuarios.includes(nombre)){
+alert("Usuario no registrado")
+return
+}
 
 usuario=nombre
 
@@ -309,10 +337,14 @@ app.style.display="block"
 
 selectorMes.value=mesActual
 
-document.getElementById("usuario").innerText="Usuario: "+usuario
+usuarioLabel()
 
 mostrar()
 
+}
+
+function usuarioLabel(){
+document.getElementById("usuario").innerText=usuario
 }
 
 function logout(){
@@ -331,7 +363,10 @@ let f=fecha.value
 let i=ingreso.value
 let e=egreso.value
 
-if(!f||!i||!e)return alert("Completar datos")
+if(!f||!i||!e){
+alert("Completar datos")
+return
+}
 
 let diff=minutos(e)-minutos(i)
 
@@ -341,6 +376,20 @@ let h=Math.floor(diff/60)
 let m=diff%60
 
 registros.push({usuario,f,i,e,h,m})
+
+localStorage.setItem("registros",JSON.stringify(registros))
+
+fecha.value=""
+ingreso.value=""
+egreso.value=""
+
+mostrar()
+
+}
+
+function borrar(i){
+
+registros.splice(i,1)
 
 localStorage.setItem("registros",JSON.stringify(registros))
 
@@ -356,24 +405,22 @@ let total=0
 
 let mesSeleccionado=selectorMes.value
 
-registros.forEach((r,index)=>{
+registros.forEach((r,i)=>{
 
 if(r.usuario!==usuario)return
 
-if(r.f.slice(0,7)!==mesSeleccionado)return
+let mesRegistro=r.f.slice(0,7)
+
+if(mesRegistro!==mesSeleccionado)return
 
 let tr=document.createElement("tr")
 
 tr.innerHTML=`
-
 <td>${r.f}</td>
 <td>${r.i}</td>
 <td>${r.e}</td>
 <td>${r.h}h ${r.m}m</td>
-<td class="no-print">
-<button class="danger" onclick="borrarRegistro(${index})">🗑</button>
-</td>
-
+<td class="no-print"><button class="danger" onclick="borrar(${i})">Borrar</button></td>
 `
 
 tabla.appendChild(tr)
@@ -389,23 +436,12 @@ totalMes.innerText=th+"h "+tm+"m"
 
 }
 
-function borrarRegistro(i){
-
-if(!confirm("¿Borrar registro?"))return
-
-registros.splice(i,1)
-
-localStorage.setItem("registros",JSON.stringify(registros))
-
-mostrar()
-
-}
-
 function borrarPerfil(){
 
-if(confirm("¿Eliminar cuenta y registros?")){
+if(confirm("¿Seguro que querés eliminar tu cuenta?\nEsta acción borrará todos tus registros.")){
 
 usuarios=usuarios.filter(u=>u!==usuario)
+
 registros=registros.filter(r=>r.usuario!==usuario)
 
 localStorage.setItem("usuarios",JSON.stringify(usuarios))
@@ -417,33 +453,95 @@ logout()
 
 }
 
+function toggleDark(){
+
+document.body.classList.toggle("dark")
+
+localStorage.setItem("dark",document.body.classList.contains("dark"))
+
+}
+
+if(localStorage.getItem("dark")=="true"){
+document.body.classList.add("dark")
+}
+
+function imprimir(){
+window.print()
+}
 function exportarExcel(){
 
 let mesSeleccionado = selectorMes.value
 
-let datos=[["Fecha","Ingreso","Egreso","Horas"]]
+if(!mesSeleccionado){
+alert("Seleccionar un mes")
+return
+}
+
+let fechaMes = new Date(mesSeleccionado+"-01")
+let nombreMes = fechaMes.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
+
+let datos = []
+let total = 0
+
+datos.push(["CONTROL DE HORAS","","",""])
+datos.push(["","","",""])
+
+datos.push(["Usuario:",usuario,"",""])
+datos.push(["Mes:",nombreMes,"",""])
+datos.push(["","","",""])
+
+datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
 
 registros.forEach(r=>{
 
-if(r.usuario!==usuario)return
-if(r.f.slice(0,7)!==mesSeleccionado)return
+if(r.usuario!==usuario) return
+if(r.f.slice(0,7)!==mesSeleccionado) return
 
-datos.push([r.f,r.i,r.e,r.h+"h "+r.m+"m"])
+let horas = r.h+"h "+r.m+"m"
+
+datos.push([
+r.f,
+r.i,
+r.e,
+horas
+])
+
+total += r.h*60+r.m
 
 })
 
-let wb=XLSX.utils.book_new()
-let ws=XLSX.utils.aoa_to_sheet(datos)
+let th = Math.floor(total/60)
+let tm = total%60
+
+datos.push(["","","",""])
+datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
+
+let wb = XLSX.utils.book_new()
+let ws = XLSX.utils.aoa_to_sheet(datos)
+
+/* unir celdas */
+
+ws["!merges"] = [
+
+{ s:{r:0,c:0}, e:{r:0,c:3} }, 
+{ s:{r:2,c:1}, e:{r:2,c:3} }, 
+{ s:{r:3,c:1}, e:{r:3,c:3} }, 
+{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
+
+]
+
+/* ancho columnas */
+
+ws["!cols"] = [
+{wch:18},
+{wch:12},
+{wch:12},
+{wch:20}
+]
 
 XLSX.utils.book_append_sheet(wb,ws,"Horas")
 
 XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
-
-}
-
-function imprimirPDF(){
-
-window.print()
 
 }
 
