@@ -8,21 +8,29 @@
 
 <style>
 
-*{box-sizing:border-box;font-family:system-ui}
+*{
+box-sizing:border-box;
+font-family:system-ui;
+}
 
 body{
 margin:0;
 background:#f4f6fb;
 color:#111;
 transition:.3s;
+overflow-x:hidden;
 }
 
-.dark{background:#0f172a;color:white}
+.dark{
+background:#0f172a;
+color:white;
+}
 
 .container{
 max-width:900px;
 margin:auto;
 padding:20px;
+width:100%;
 }
 
 .header{
@@ -34,9 +42,16 @@ margin-bottom:20px;
 gap:10px;
 }
 
-h1{margin:0;font-size:22px}
+h1{
+margin:0;
+font-size:22px;
+}
 
-.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
 
 button{
 padding:8px 14px;
@@ -44,27 +59,36 @@ border:none;
 border-radius:8px;
 cursor:pointer;
 font-weight:600;
+white-space:nowrap;
 }
 
 .primary{background:#4f46e5;color:white}
 .secondary{background:#e5e7eb}
 .danger{background:#ef4444;color:white}
 
-.dark .secondary{background:#334155;color:white}
+.dark .secondary{
+background:#334155;
+color:white;
+}
 
 .card{
 background:white;
-padding:0px;
+padding:18px;
 border-radius:12px;
 box-shadow:0 8px 20px rgba(0,0,0,0.1);
 margin-bottom:20px;
+width:100%;
+max-width:100%;
+overflow:hidden;
 }
 
-.dark .card{background:#1e293b}
+.dark .card{
+background:#1e293b;
+}
 
 input{
-width:95%;
-padding:5px;
+width:100%;
+padding:8px;
 border-radius:8px;
 border:1px solid #ccc;
 margin-bottom:10px;
@@ -74,28 +98,39 @@ margin-bottom:10px;
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
+width:100%;
 }
 
 .table-wrap{
+width:100%;
 overflow-x:auto;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
+table-layout:fixed;
 }
 
 th,td{
 padding:10px;
 border-bottom:1px solid #ddd;
 text-align:center;
+word-break:break-word;
 }
 
-.dark th,.dark td{border-bottom:1px solid #334155}
+.dark th,
+.dark td{
+border-bottom:1px solid #334155;
+}
 
-th{background:#f1f5f9}
+th{
+background:#f1f5f9;
+}
 
-.dark th{background:#334155}
+.dark th{
+background:#334155;
+}
 
 .total{
 text-align:right;
@@ -107,6 +142,7 @@ margin-top:10px;
 max-width:380px;
 margin:auto;
 margin-top:120px;
+padding:20px;
 }
 
 .link{
@@ -115,11 +151,31 @@ cursor:pointer;
 font-weight:600;
 }
 
-@media(max-width:600px){
-.grid{grid-template-columns:1fr}
+@media(max-width:700px){
+
+.container{
+padding:12px;
 }
 
-.no-print{display:block}
+.grid{
+grid-template-columns:1fr;
+}
+
+th,td{
+padding:8px;
+font-size:14px;
+}
+
+button{
+padding:6px 10px;
+font-size:13px;
+}
+
+}
+
+.no-print{
+display:block;
+}
 
 @media print{
 
@@ -144,7 +200,6 @@ display:none;
 }
 
 }
-
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
