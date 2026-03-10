@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -75,12 +76,13 @@ grid-template-columns:repeat(3,1fr);
 gap:10px;
 }
 
-.table-wrap{overflow:auto}
+.table-wrap{
+overflow-x:auto;
+}
 
 table{
 width:100%;
 border-collapse:collapse;
-min-width:500px;
 }
 
 th,td{
@@ -117,8 +119,6 @@ font-weight:600;
 .grid{grid-template-columns:1fr}
 }
 
-/* ---- IMPRESION SOLO REGISTROS ---- */
-
 .no-print{display:block}
 
 @media print{
@@ -146,12 +146,12 @@ display:none;
 }
 
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 </head>
 
 <body>
-
-<!-- LOGIN -->
 
 <div id="loginScreen" class="card center">
 
@@ -166,8 +166,6 @@ display:none;
 
 </div>
 
-<!-- REGISTRO -->
-
 <div id="registerScreen" class="card center" style="display:none">
 
 <h2>Crear cuenta</h2>
@@ -181,8 +179,6 @@ display:none;
 
 </div>
 
-<!-- APP -->
-
 <div id="app" style="display:none">
 
 <div class="container">
@@ -195,9 +191,7 @@ display:none;
 
 <span id="usuario"></span>
 
-<button class="secondary no-print" onclick="toggleDark()">Modo</button>
-<button class="secondary no-print" onclick="borrarPerfil()">Borrar Perfil</button>
-<button class="danger no-print" onclick="logout()">Salir</button>
+<button class="secondary no-print" onclick="toggleDark()">Modo</button> <button class="secondary no-print" onclick="borrarPerfil()">Borrar Perfil</button> <button class="danger no-print" onclick="logout()">Salir</button>
 
 </div>
 
@@ -244,7 +238,7 @@ display:none;
 <th>Ingreso</th>
 <th>Egreso</th>
 <th>Horas</th>
-<th class="no-print"></th>
+<th class="no-print">Acción</th>
 </tr>
 </thead>
 
@@ -258,8 +252,8 @@ display:none;
 Total Horas: <span id="totalMes">0h 0m</span>
 </div>
 
-<button class="primary no-print" onclick="imprimir()">Imprimir mes / PDF</button>
-<button class="secondary no-print" onclick="exportarExcel()">Exportar Excel</button>
+<button class="primary no-print" onclick="imprimir()">Imprimir mes / PDF</button> <button class="secondary no-print" onclick="exportarExcel()">Exportar Excel</button>
+
 </div>
 
 </div>
@@ -398,16 +392,6 @@ mostrar()
 
 }
 
-function borrar(i){
-
-registros.splice(i,1)
-
-localStorage.setItem("registros",JSON.stringify(registros))
-
-mostrar()
-
-}
-
 function mostrar(){
 
 tabla.innerHTML=""
@@ -448,7 +432,9 @@ tr.innerHTML=`
 <td>${dias[f].ingreso}</td>
 <td>${dias[f].egreso}</td>
 <td>${h}h ${m}m</td>
-<td class="no-print"></td>
+<td class="no-print">
+<button class="danger" onclick="borrarDia('${f}')">Borrar</button>
+</td>
 `
 
 tabla.appendChild(tr)
@@ -461,6 +447,18 @@ let th=Math.floor(totalMes/60)
 let tm=totalMes%60
 
 document.getElementById("totalMes").innerText=th+"h "+tm+"m"
+
+}
+
+function borrarDia(fecha){
+
+if(!confirm("¿Eliminar registros de este día?")) return
+
+registros = registros.filter(r => !(r.usuario===usuario && r.f===fecha))
+
+localStorage.setItem("registros",JSON.stringify(registros))
+
+mostrar()
 
 }
 
@@ -496,6 +494,7 @@ document.body.classList.add("dark")
 function imprimir(){
 window.print()
 }
+
 function exportarExcel(){
 
 let mesSeleccionado = selectorMes.value
@@ -546,19 +545,6 @@ datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
 
 let wb = XLSX.utils.book_new()
 let ws = XLSX.utils.aoa_to_sheet(datos)
-
-/* unir celdas */
-
-ws["!merges"] = [
-
-{ s:{r:0,c:0}, e:{r:0,c:3} }, 
-{ s:{r:2,c:1}, e:{r:2,c:3} }, 
-{ s:{r:3,c:1}, e:{r:3,c:3} }, 
-{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
-
-]
-
-/* ancho columnas */
 
 ws["!cols"] = [
 {wch:18},
