@@ -616,68 +616,43 @@ let fecha=new Date(mesSeleccionado+"-01")
 
 let nombreMes=fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
 
-let total=0
+let tablaHTML=document.querySelector(".table-wrap").outerHTML
+
+let totalTexto=document.getElementById("totalMes").innerText
 
 let contenido=`
-<h2 style="text-align:center">Historial de horas</h2>
-<h3 style="text-align:center">${usuario}</h3>
-<h4 style="text-align:center">Mes: ${nombreMes}</h4>
+<div style="font-family:Arial;padding:20px">
 
-<table style="
-width:100%;
-border-collapse:collapse;
-font-family:Arial;
-">
+<h2 style="text-align:center;margin-bottom:5px">
+Historial de horas
+</h2>
 
-<tr>
-<th style="border:1px solid #000;padding:8px">Fecha</th>
-<th style="border:1px solid #000;padding:8px">Ingreso</th>
-<th style="border:1px solid #000;padding:8px">Egreso</th>
-<th style="border:1px solid #000;padding:8px">Horas</th>
-</tr>
-`
+<h3 style="text-align:center;margin-top:0">
+${usuario}
+</h3>
 
-registros.forEach(r=>{
+<p style="text-align:center;margin-bottom:20px">
+Mes: ${nombreMes}
+</p>
 
-if(r.usuario!==usuario) return
-if(r.f.slice(0,7)!==mesSeleccionado) return
-
-contenido+=`
-<tr>
-<td style="border:1px solid #000;padding:8px">${r.f}</td>
-<td style="border:1px solid #000;padding:8px">${r.i}</td>
-<td style="border:1px solid #000;padding:8px">${r.e}</td>
-<td style="border:1px solid #000;padding:8px">${r.h}h ${r.m}m</td>
-</tr>
-`
-
-total+=r.h*60+r.m
-
-})
-
-let th=Math.floor(total/60)
-let tm=total%60
-
-contenido+=`
-</table>
+${tablaHTML}
 
 <h3 style="text-align:right;margin-top:20px">
-Total del mes: ${th}h ${tm}m
+Total del mes: ${totalTexto}
 </h3>
+
+</div>
 `
 
-let div=document.createElement("div")
-
-div.innerHTML=contenido
+let element=document.createElement("div")
+element.innerHTML=contenido
 
 html2pdf().set({
-
 margin:10,
 filename:`horas_${mesSeleccionado}.pdf`,
 html2canvas:{scale:2},
 jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}
-
-}).from(div).save()
+}).from(element).save()
 
 }
 </script>
