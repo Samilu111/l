@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -43,6 +44,13 @@ align-items:center;
 flex-wrap:wrap;
 gap:15px;
 margin-bottom:25px;
+width:100%;
+}
+
+h1{
+margin:0;
+font-size:24px;
+font-weight:700;
 }
 
 .actions{
@@ -59,6 +67,11 @@ border-radius:10px;
 cursor:pointer;
 font-weight:600;
 font-size:14px;
+transition:.2s;
+}
+
+button:hover{
+opacity:.9;
 }
 
 .primary{
@@ -75,6 +88,11 @@ background:#ef4444;
 color:white;
 }
 
+.dark .secondary{
+background:#334155;
+color:white;
+}
+
 .card{
 background:white;
 padding:22px;
@@ -85,6 +103,13 @@ margin-bottom:25px;
 
 .dark .card{
 background:#1e293b;
+}
+
+label{
+font-weight:600;
+font-size:14px;
+display:block;
+margin-bottom:4px;
 }
 
 input{
@@ -100,11 +125,14 @@ font-size:16px;
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:12px;
+margin-bottom:10px;
 }
 
 .table-wrap{
 width:100%;
 overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+margin-top:10px;
 }
 
 table{
@@ -117,22 +145,34 @@ th,td{
 padding:12px;
 border-bottom:1px solid #ddd;
 text-align:center;
+font-size:14px;
+}
+
+.dark th,.dark td{
+border-bottom:1px solid #334155;
 }
 
 th{
 background:#f1f5f9;
+font-weight:600;
+}
+
+.dark th{
+background:#334155;
 }
 
 .total{
 text-align:right;
 font-weight:700;
 margin-top:15px;
+font-size:16px;
 }
 
 .center{
 max-width:420px;
 margin:auto;
 margin-top:120px;
+padding:25px;
 }
 
 .link{
@@ -141,42 +181,30 @@ cursor:pointer;
 font-weight:600;
 }
 
-/* IMPRESION PDF */
-
-@media print{
-
-body *{
-visibility:hidden;
+h2{
+margin-top:0;
+margin-bottom:15px;
 }
 
-#printArea,#printArea *{
-visibility:visible;
+@media (max-width:700px){
+
+.header{
+flex-direction:column;
+align-items:flex-start;
 }
 
-#printArea{
-position:absolute;
-left:0;
-top:0;
+.grid{
+grid-template-columns:1fr;
+}
+
+button{
 width:100%;
-background:white;
-padding:20px;
-}
-
-#printArea table{
-width:100%;
-border-collapse:collapse;
-}
-
-#printArea th,
-#printArea td{
-border:1px solid black;
-padding:8px;
-text-align:center;
 }
 
 }
 
 </style>
+
 </head>
 
 <body>
@@ -185,8 +213,11 @@ text-align:center;
 
 <h2>Iniciar sesión</h2>
 
-<input id="loginNombre" placeholder="Nombre">
-<input id="loginApellido" placeholder="Apellido">
+<label>Nombre</label>
+<input id="loginNombre">
+
+<label>Apellido</label>
+<input id="loginApellido">
 
 <button class="primary" onclick="login()">Entrar</button>
 
@@ -196,13 +227,15 @@ text-align:center;
 
 </div>
 
-
 <div id="registerScreen" class="card center" style="display:none">
 
 <h2>Crear cuenta</h2>
 
-<input id="regNombre" placeholder="Nombre">
-<input id="regApellido" placeholder="Apellido">
+<label>Nombre</label>
+<input id="regNombre">
+
+<label>Apellido</label>
+<input id="regApellido">
 
 <button class="primary" onclick="registrar()">Registrarse</button>
 
@@ -211,7 +244,6 @@ text-align:center;
 </p>
 
 </div>
-
 
 <div id="app" style="display:none">
 
@@ -226,13 +258,14 @@ text-align:center;
 <span id="usuario"></span>
 
 <button class="secondary" onclick="toggleDark()">Modo</button>
+
 <button class="secondary" onclick="borrarPerfil()">Borrar Perfil</button>
+
 <button class="danger" onclick="logout()">Salir</button>
 
 </div>
 
 </div>
-
 
 <div class="card">
 
@@ -240,9 +273,20 @@ text-align:center;
 
 <div class="grid">
 
+<div>
+<label>Fecha</label>
 <input type="date" id="fecha">
+</div>
+
+<div>
+<label>Hora de ingreso</label>
 <input type="time" id="ingreso">
+</div>
+
+<div>
+<label>Hora de egreso</label>
 <input type="time" id="egreso">
+</div>
 
 </div>
 
@@ -250,16 +294,16 @@ text-align:center;
 
 </div>
 
-
 <div class="card">
 
 <h3>Registros por mes</h3>
 
+<label>Seleccionar mes</label>
 <input type="month" id="selectorMes" onchange="mostrar()">
 
 <div class="table-wrap">
 
-<table id="tablaExcel">
+<table>
 
 <thead>
 <tr>
@@ -267,7 +311,6 @@ text-align:center;
 <th>Ingreso</th>
 <th>Egreso</th>
 <th>Horas</th>
-<th>Acción</th>
 </tr>
 </thead>
 
@@ -281,11 +324,9 @@ text-align:center;
 Total del mes: <span id="totalMes">0h 0m</span>
 </div>
 
-<br>
-
-<button class="primary" onclick="exportarPDF()">Exportar PDF</button>
-
-<button class="secondary" onclick="exportarExcel()">Exportar Excel</button>
+<button class="primary" onclick="exportarExcel()">
+Exportar mes a Excel
+</button>
 
 </div>
 
@@ -318,7 +359,20 @@ loginScreen.style.display="block"
 
 function registrar(){
 
-let nombre=cap(regNombre.value)+" "+cap(regApellido.value)
+let n=cap(regNombre.value.trim())
+let a=cap(regApellido.value.trim())
+
+if(!n||!a){
+alert("Completar datos")
+return
+}
+
+let nombre=n+" "+a
+
+if(usuarios.includes(nombre)){
+alert("Ese usuario ya existe")
+return
+}
 
 usuarios.push(nombre)
 
@@ -332,7 +386,10 @@ mostrarLogin()
 
 function login(){
 
-let nombre=cap(loginNombre.value)+" "+cap(loginApellido.value)
+let n=cap(loginNombre.value.trim())
+let a=cap(loginApellido.value.trim())
+
+let nombre=n+" "+a
 
 if(!usuarios.includes(nombre)){
 alert("Usuario no registrado")
@@ -359,8 +416,7 @@ app.style.display="block"
 
 selectorMes.value=mesActual
 
-usuarioSpan=document.getElementById("usuario")
-usuarioSpan.innerText="Usuario: "+usuario
+document.getElementById("usuario").innerText="Usuario: "+usuario
 
 mostrar()
 
@@ -382,6 +438,11 @@ let f=fecha.value
 let i=ingreso.value
 let e=egreso.value
 
+if(!f||!i||!e){
+alert("Completar datos")
+return
+}
+
 let diff=minutos(e)-minutos(i)
 
 if(diff<0) diff+=1440
@@ -393,15 +454,9 @@ registros.push({usuario,f,i,e,h,m})
 
 localStorage.setItem("registros",JSON.stringify(registros))
 
-mostrar()
-
-}
-
-function borrar(i){
-
-registros.splice(i,1)
-
-localStorage.setItem("registros",JSON.stringify(registros))
+fecha.value=""
+ingreso.value=""
+egreso.value=""
 
 mostrar()
 
@@ -413,12 +468,15 @@ tabla.innerHTML=""
 
 let total=0
 
-let mes=selectorMes.value
+let mesSeleccionado=selectorMes.value
 
-registros.forEach((r,i)=>{
+registros.forEach((r)=>{
 
 if(r.usuario!==usuario)return
-if(r.f.slice(0,7)!==mes)return
+
+let mesRegistro=r.f.slice(0,7)
+
+if(mesRegistro!==mesSeleccionado)return
 
 let tr=document.createElement("tr")
 
@@ -427,7 +485,6 @@ tr.innerHTML=`
 <td>${r.i}</td>
 <td>${r.e}</td>
 <td>${r.h}h ${r.m}m</td>
-<td><button class="danger" onclick="borrar(${i})">Borrar</button></td>
 `
 
 tabla.appendChild(tr)
@@ -445,6 +502,8 @@ totalMes.innerText=th+"h "+tm+"m"
 
 function borrarPerfil(){
 
+if(confirm("¿Seguro que querés eliminar tu cuenta?\nSe borrarán todos tus registros.")){
+
 usuarios=usuarios.filter(u=>u!==usuario)
 registros=registros.filter(r=>r.usuario!==usuario)
 
@@ -452,6 +511,8 @@ localStorage.setItem("usuarios",JSON.stringify(usuarios))
 localStorage.setItem("registros",JSON.stringify(registros))
 
 logout()
+
+}
 
 }
 
@@ -467,51 +528,38 @@ if(localStorage.getItem("dark")=="true"){
 document.body.classList.add("dark")
 }
 
-iniciar()
+function exportarExcel(){
 
+let mesSeleccionado=selectorMes.value
 
-/* EXPORTAR PDF */
+if(!mesSeleccionado){
+alert("Seleccionar un mes")
+return
+}
 
-function exportarPDF(){
-
-let mes=selectorMes.value
-
-let fecha=new Date(mes+"-01")
+let fecha=new Date(mesSeleccionado+"-01")
 
 let nombreMes=fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
 
+let datos=[]
+
 let total=0
-
-let html=`
-<div id="printArea">
-
-<h2 style="text-align:center">Historial de horas</h2>
-<h3 style="text-align:center">${usuario}</h3>
-<h4 style="text-align:center">Mes: ${nombreMes}</h4>
-
-<table>
-
-<tr>
-<th>Fecha</th>
-<th>Ingreso</th>
-<th>Egreso</th>
-<th>Horas</th>
-</tr>
-`
 
 registros.forEach(r=>{
 
 if(r.usuario!==usuario) return
-if(r.f.slice(0,7)!==mes) return
+if(r.f.slice(0,7)!==mesSeleccionado) return
 
-html+=`
-<tr>
-<td>${r.f}</td>
-<td>${r.i}</td>
-<td>${r.e}</td>
-<td>${r.h}h ${r.m}m</td>
-</tr>
-`
+let horas=r.h+"h "+r.m+"m"
+
+datos.push({
+Usuario:usuario,
+Mes:nombreMes,
+Fecha:r.f,
+Ingreso:r.i,
+Egreso:r.e,
+Horas:horas
+})
 
 total+=r.h*60+r.m
 
@@ -520,42 +568,31 @@ total+=r.h*60+r.m
 let th=Math.floor(total/60)
 let tm=total%60
 
-html+=`
-</table>
+datos.push({})
+datos.push({
+Usuario:"TOTAL",
+Mes:nombreMes,
+Fecha:"",
+Ingreso:"",
+Egreso:"",
+Horas:th+"h "+tm+"m"
+})
 
-<h3 style="text-align:right">
-Total del mes: ${th}h ${tm}m
-</h3>
+let wb=XLSX.utils.book_new()
 
-</div>
-`
+let ws=XLSX.utils.json_to_sheet(datos)
 
-let div=document.createElement("div")
-div.innerHTML=html
-document.body.appendChild(div)
+XLSX.utils.book_append_sheet(wb,ws,"Horas")
 
-window.print()
-
-div.remove()
-
-}
-
-
-/* EXPORTAR EXCEL */
-
-function exportarExcel(){
-
-let tabla=document.getElementById("tablaExcel")
-
-let wb=XLSX.utils.table_to_book(tabla,{sheet:"Horas"})
-
-XLSX.writeFile(wb,"horas_trabajadas.xlsx")
+XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
 
 }
+
+iniciar()
 
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
 </html>
