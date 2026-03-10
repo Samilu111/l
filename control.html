@@ -412,38 +412,55 @@ function mostrar(){
 
 tabla.innerHTML=""
 
-let total=0
-
+let totalMes=0
 let mesSeleccionado=selectorMes.value
 
-registros.forEach((r,i)=>{
+let dias={}
+
+registros.forEach(r=>{
 
 if(r.usuario!==usuario)return
+if(r.f.slice(0,7)!==mesSeleccionado)return
 
-let mesRegistro=r.f.slice(0,7)
+if(!dias[r.f]){
+dias[r.f]={ingreso:r.i,egreso:r.e,min:0}
+}
 
-if(mesRegistro!==mesSeleccionado)return
+let minutosDia=r.h*60+r.m
+dias[r.f].min+=minutosDia
+
+if(r.i<dias[r.f].ingreso) dias[r.f].ingreso=r.i
+if(r.e>dias[r.f].egreso) dias[r.f].egreso=r.e
+
+})
+
+Object.keys(dias).sort().forEach(f=>{
+
+let min=dias[f].min
+
+let h=Math.floor(min/60)
+let m=min%60
 
 let tr=document.createElement("tr")
 
 tr.innerHTML=`
-<td>${r.f}</td>
-<td>${r.i}</td>
-<td>${r.e}</td>
-<td>${r.h}h ${r.m}m</td>
-<td class="no-print"><button class="danger" onclick="borrar(${i})">Borrar</button></td>
+<td>${f}</td>
+<td>${dias[f].ingreso}</td>
+<td>${dias[f].egreso}</td>
+<td>${h}h ${m}m</td>
+<td class="no-print"></td>
 `
 
 tabla.appendChild(tr)
 
-total+=r.h*60+r.m
+totalMes+=min
 
 })
 
-let th=Math.floor(total/60)
-let tm=total%60
+let th=Math.floor(totalMes/60)
+let tm=totalMes%60
 
-totalMes.innerText=th+"h "+tm+"m"
+document.getElementById("totalMes").innerText=th+"h "+tm+"m"
 
 }
 
