@@ -545,6 +545,21 @@ let datos=[]
 
 let total=0
 
+/* ---------- TITULO ---------- */
+
+datos.push(["CONTROL DE HORAS"])
+datos.push([])
+
+datos.push(["Usuario:",usuario])
+datos.push(["Mes:",nombreMes])
+datos.push([])
+
+/* ---------- CABECERA TABLA ---------- */
+
+datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
+
+/* ---------- DATOS ---------- */
+
 registros.forEach(r=>{
 
 if(r.usuario!==usuario) return
@@ -552,39 +567,43 @@ if(r.f.slice(0,7)!==mesSeleccionado) return
 
 let horas=r.h+"h "+r.m+"m"
 
-datos.push({
-Usuario:usuario,
-Mes:nombreMes,
-Fecha:r.f,
-Ingreso:r.i,
-Egreso:r.e,
-Horas:horas
-})
+datos.push([
+r.f,
+r.i,
+r.e,
+horas
+])
 
 total+=r.h*60+r.m
 
 })
 
+/* ---------- TOTAL ---------- */
+
 let th=Math.floor(total/60)
 let tm=total%60
 
-datos.push({})
-datos.push({
-Usuario:"TOTAL",
-Mes:nombreMes,
-Fecha:"",
-Ingreso:"",
-Egreso:"",
-Horas:th+"h "+tm+"m"
-})
+datos.push([])
+datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
+
+/* ---------- CREAR EXCEL ---------- */
 
 let wb=XLSX.utils.book_new()
 
-let ws=XLSX.utils.json_to_sheet(datos)
+let ws=XLSX.utils.aoa_to_sheet(datos)
+
+/* ancho columnas */
+
+ws["!cols"]=[
+{wch:15},
+{wch:10},
+{wch:10},
+{wch:18}
+]
 
 XLSX.utils.book_append_sheet(wb,ws,"Horas")
 
-XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
+XLSX.writeFile(wb,"horas_"+usuario+"_"+mesSeleccionado+".xlsx")
 
 }
 
