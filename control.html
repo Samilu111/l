@@ -220,6 +220,29 @@ grid-template-columns:1fr;
 button{
 width:100%;
 }
+@media print{
+
+body{
+background:white;
+}
+
+button,
+.actions,
+#loginScreen,
+#registerScreen{
+display:none !important;
+}
+
+.container{
+max-width:100%;
+}
+
+.card{
+box-shadow:none;
+border:1px solid #ccc;
+}
+
+}
 
 }
 
@@ -360,6 +383,7 @@ width:100%;
 <div class="total">
 Total del mes: <span id="totalMes">0h 0m</span>
 </div>
+<button class="primary" onclick="imprimirPDF()">Imprimir / Guardar PDF del mes</button>
 
 </div>
 
@@ -601,7 +625,24 @@ document.body.classList.add("dark")
 }
 
 iniciar()
+function imprimirPDF(){
 
+let mes = selectorMes.value
+
+if(!mes){
+alert("Seleccioná un mes primero")
+return
+}
+
+let fecha = new Date(mes+"-01")
+
+let nombreMes = fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
+
+document.title = "Horas "+usuario+" - "+nombreMes
+
+window.print()
+
+}
 </script>
 
 </body>
