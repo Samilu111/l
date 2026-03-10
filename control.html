@@ -3,10 +3,14 @@
 
 <head>
 
+<!-- ================= META ================= -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Control de Horas</title>
+
+<!-- ================= ESTILOS ================= -->
 
 <style>
 
@@ -37,6 +41,8 @@ padding:30px 20px;
 width:100%;
 }
 
+/* ---------- HEADER ---------- */
+
 .header{
 display:flex;
 justify-content:space-between;
@@ -59,6 +65,8 @@ gap:10px;
 flex-wrap:wrap;
 align-items:center;
 }
+
+/* ---------- BOTONES ---------- */
 
 button{
 padding:12px 16px;
@@ -93,6 +101,8 @@ background:#334155;
 color:white;
 }
 
+/* ---------- TARJETAS ---------- */
+
 .card{
 background:white;
 padding:22px;
@@ -104,6 +114,8 @@ margin-bottom:25px;
 .dark .card{
 background:#1e293b;
 }
+
+/* ---------- INPUTS ---------- */
 
 label{
 font-weight:600;
@@ -121,12 +133,16 @@ margin-bottom:12px;
 font-size:16px;
 }
 
+/* ---------- GRID FORM ---------- */
+
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:12px;
 margin-bottom:10px;
 }
+
+/* ---------- TABLA ---------- */
 
 .table-wrap{
 width:100%;
@@ -168,6 +184,8 @@ margin-top:15px;
 font-size:16px;
 }
 
+/* ---------- LOGIN ---------- */
+
 .center{
 max-width:420px;
 margin:auto;
@@ -186,7 +204,7 @@ margin-top:0;
 margin-bottom:15px;
 }
 
-/* RESPONSIVE */
+/* ---------- RESPONSIVE ---------- */
 
 @media (max-width:700px){
 
@@ -205,37 +223,13 @@ width:100%;
 
 }
 
-/* ===== ESTILO PARA PDF / IMPRESIÓN ===== */
-
-@media print{
-
-body{
-background:white;
-}
-
-button,
-.actions,
-#loginScreen,
-#registerScreen{
-display:none !important;
-}
-
-.container{
-max-width:100%;
-}
-
-.card{
-box-shadow:none;
-border:1px solid #ccc;
-}
-
-}
-
 </style>
 
 </head>
 
 <body>
+
+<!-- ================= LOGIN ================= -->
 
 <div id="loginScreen" class="card center">
 
@@ -255,6 +249,9 @@ border:1px solid #ccc;
 
 </div>
 
+
+<!-- ================= REGISTRO ================= -->
+
 <div id="registerScreen" class="card center" style="display:none">
 
 <h2>Crear cuenta</h2>
@@ -273,9 +270,14 @@ border:1px solid #ccc;
 
 </div>
 
+
+<!-- ================= APLICACIÓN ================= -->
+
 <div id="app" style="display:none">
 
 <div class="container">
+
+<!-- HEADER -->
 
 <div class="header">
 
@@ -294,6 +296,9 @@ border:1px solid #ccc;
 </div>
 
 </div>
+
+
+<!-- ================= CARGA DE HORAS ================= -->
 
 <div class="card">
 
@@ -321,6 +326,9 @@ border:1px solid #ccc;
 <button class="primary" onclick="guardar()">Guardar registro</button>
 
 </div>
+
+
+<!-- ================= REGISTROS ================= -->
 
 <div class="card">
 
@@ -353,15 +361,17 @@ border:1px solid #ccc;
 Total del mes: <span id="totalMes">0h 0m</span>
 </div>
 
-<button class="primary" onclick="imprimirPDF()">Imprimir / Guardar PDF del mes</button>
-
 </div>
 
 </div>
 
 </div>
+
+<!-- ================= JAVASCRIPT ================= -->
 
 <script>
+
+/* ---------- BASE DE DATOS LOCAL ---------- */
 
 let registros=JSON.parse(localStorage.getItem("registros"))||[]
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
@@ -370,9 +380,13 @@ let usuario=null
 let hoy=new Date()
 let mesActual=hoy.toISOString().slice(0,7)
 
+/* ---------- FUNCIONES GENERALES ---------- */
+
 function cap(t){
 return t.charAt(0).toUpperCase()+t.slice(1).toLowerCase()
 }
+
+/* ---------- CAMBIO LOGIN / REGISTRO ---------- */
 
 function mostrarRegistro(){
 loginScreen.style.display="none"
@@ -383,6 +397,8 @@ function mostrarLogin(){
 registerScreen.style.display="none"
 loginScreen.style.display="block"
 }
+
+/* ---------- REGISTRAR USUARIO ---------- */
 
 function registrar(){
 
@@ -411,6 +427,8 @@ mostrarLogin()
 
 }
 
+/* ---------- LOGIN ---------- */
+
 function login(){
 
 let n=cap(loginNombre.value.trim())
@@ -431,6 +449,8 @@ iniciar()
 
 }
 
+/* ---------- INICIAR APP ---------- */
+
 function iniciar(){
 
 usuario=localStorage.getItem("sesion")
@@ -449,15 +469,21 @@ mostrar()
 
 }
 
+/* ---------- CERRAR SESIÓN ---------- */
+
 function logout(){
 localStorage.removeItem("sesion")
 location.reload()
 }
 
+/* ---------- CALCULO MINUTOS ---------- */
+
 function minutos(h){
 let p=h.split(":")
 return p[0]*60+parseInt(p[1])
 }
+
+/* ---------- GUARDAR REGISTRO ---------- */
 
 function guardar(){
 
@@ -489,6 +515,8 @@ mostrar()
 
 }
 
+/* ---------- BORRAR REGISTRO ---------- */
+
 function borrar(i){
 
 registros.splice(i,1)
@@ -498,6 +526,8 @@ localStorage.setItem("registros",JSON.stringify(registros))
 mostrar()
 
 }
+
+/* ---------- MOSTRAR TABLA ---------- */
 
 function mostrar(){
 
@@ -538,26 +568,7 @@ totalMes.innerText=th+"h "+tm+"m"
 
 }
 
-/* ===== IMPRIMIR PDF ===== */
-
-function imprimirPDF(){
-
-let mes = selectorMes.value
-
-if(!mes){
-alert("Seleccioná un mes primero")
-return
-}
-
-let fecha = new Date(mes+"-01")
-
-let nombreMes = fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
-
-document.title = "Horas "+usuario+" - "+nombreMes
-
-window.print()
-
-}
+/* ---------- BORRAR PERFIL ---------- */
 
 function borrarPerfil(){
 
@@ -574,6 +585,8 @@ logout()
 }
 
 }
+
+/* ---------- MODO OSCURO ---------- */
 
 function toggleDark(){
 
