@@ -37,10 +37,6 @@ padding:30px 20px;
 width:100%;
 }
 
-.container *{
-max-width:100%;
-}
-
 .header{
 display:flex;
 justify-content:space-between;
@@ -118,8 +114,6 @@ margin-bottom:4px;
 
 input{
 width:100%;
-max-width:100%;
-min-width:0;
 padding:14px;
 border-radius:10px;
 border:1px solid #ccc;
@@ -129,10 +123,9 @@ font-size:16px;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+grid-template-columns:repeat(3,1fr);
 gap:12px;
 margin-bottom:10px;
-width:100%;
 }
 
 .table-wrap{
@@ -144,7 +137,7 @@ margin-top:10px;
 
 table{
 width:100%;
-min-width:500px;
+min-width:450px;
 border-collapse:collapse;
 }
 
@@ -195,34 +188,13 @@ margin-bottom:15px;
 
 @media (max-width:700px){
 
-.container{
-padding:20px 15px;
-}
-
 .header{
 flex-direction:column;
 align-items:flex-start;
 }
-input{
-display:block;
-width:100%;
-max-width:100%;
-min-width:0;
-padding:14px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-bottom:12px;
-font-size:16px;
-}
+
 .grid{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-width:100%;
-}
-.grid > div{
-flex:1 1 180px;
-min-width:0;
+grid-template-columns:1fr;
 }
 
 button{
@@ -363,8 +335,6 @@ Exportar mes a Excel
 </div>
 
 <script>
-
-/* TODO TU JAVASCRIPT ORIGINAL SIN CAMBIOS */
 
 let registros=JSON.parse(localStorage.getItem("registros"))||[]
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
@@ -558,7 +528,90 @@ if(localStorage.getItem("dark")=="true"){
 document.body.classList.add("dark")
 }
 
+function exportarExcel(){
+
+let mesSeleccionado=selectorMes.value
+
+if(!mesSeleccionado){
+alert("Seleccionar un mes")
+return
+}
+
+let fecha=new Date(mesSeleccionado+"-01")
+
+let nombreMes=fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
+
+let datos=[]
+
+let total=0
+
+/* ---------- TITULO ---------- */
+
+datos.push(["CONTROL DE HORAS"])
+datos.push([])
+
+datos.push(["Usuario:",usuario])
+datos.push(["Mes:",nombreMes])
+datos.push([])
+
+/* ---------- CABECERA TABLA ---------- */
+
+datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
+
+/* ---------- DATOS ---------- */
+
+registros.forEach(r=>{
+
+if(r.usuario!==usuario) return
+if(r.f.slice(0,7)!==mesSeleccionado) return
+
+let horas=r.h+"h "+r.m+"m"
+
+datos.push([
+r.f,
+r.i,
+r.e,
+horas
+])
+
+total+=r.h*60+r.m
+
+})
+
+/* ---------- TOTAL ---------- */
+
+let th=Math.floor(total/60)
+let tm=total%60
+
+datos.push([])
+datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
+
+/* ---------- CREAR EXCEL ---------- */
+
+let wb=XLSX.utils.book_new()
+
+let ws=XLSX.utils.aoa_to_sheet(datos)
+
+/* ancho columnas */
+
+ws["!cols"]=[
+{wch:15},
+{wch:10},
+{wch:10},
+{wch:18}
+]
+
+XLSX.utils.book_append_sheet(wb,ws,"Horas")
+
+XLSX.writeFile(wb,"horas_"+usuario+"_"+mesSeleccionado+".xlsx")
+
+}
+
+iniciar()
+
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
 </html>
