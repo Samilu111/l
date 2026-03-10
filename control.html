@@ -530,42 +530,34 @@ document.body.classList.add("dark")
 
 function exportarExcel(){
 
-let mesSeleccionado=selectorMes.value
+let mesSeleccionado = selectorMes.value
 
 if(!mesSeleccionado){
 alert("Seleccionar un mes")
 return
 }
 
-let fecha=new Date(mesSeleccionado+"-01")
+let fechaMes = new Date(mesSeleccionado+"-01")
+let nombreMes = fechaMes.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
 
-let nombreMes=fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
+let datos = []
+let total = 0
 
-let datos=[]
+datos.push(["CONTROL DE HORAS","","",""])
+datos.push(["","","",""])
 
-let total=0
-
-/* ---------- TITULO ---------- */
-
-datos.push(["CONTROL DE HORAS"])
-datos.push([])
-
-datos.push(["Usuario:",usuario])
-datos.push(["Mes:",nombreMes])
-datos.push([])
-
-/* ---------- CABECERA TABLA ---------- */
+datos.push(["Usuario:",usuario,"",""])
+datos.push(["Mes:",nombreMes,"",""])
+datos.push(["","","",""])
 
 datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
-
-/* ---------- DATOS ---------- */
 
 registros.forEach(r=>{
 
 if(r.usuario!==usuario) return
 if(r.f.slice(0,7)!==mesSeleccionado) return
 
-let horas=r.h+"h "+r.m+"m"
+let horas = r.h+"h "+r.m+"m"
 
 datos.push([
 r.f,
@@ -574,36 +566,42 @@ r.e,
 horas
 ])
 
-total+=r.h*60+r.m
+total += r.h*60+r.m
 
 })
 
-/* ---------- TOTAL ---------- */
+let th = Math.floor(total/60)
+let tm = total%60
 
-let th=Math.floor(total/60)
-let tm=total%60
-
-datos.push([])
+datos.push(["","","",""])
 datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
 
-/* ---------- CREAR EXCEL ---------- */
+let wb = XLSX.utils.book_new()
+let ws = XLSX.utils.aoa_to_sheet(datos)
 
-let wb=XLSX.utils.book_new()
+/* unir celdas */
 
-let ws=XLSX.utils.aoa_to_sheet(datos)
+ws["!merges"] = [
+
+{ s:{r:0,c:0}, e:{r:0,c:3} }, 
+{ s:{r:2,c:1}, e:{r:2,c:3} }, 
+{ s:{r:3,c:1}, e:{r:3,c:3} }, 
+{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
+
+]
 
 /* ancho columnas */
 
-ws["!cols"]=[
-{wch:15},
-{wch:10},
-{wch:10},
-{wch:18}
+ws["!cols"] = [
+{wch:18},
+{wch:12},
+{wch:12},
+{wch:20}
 ]
 
 XLSX.utils.book_append_sheet(wb,ws,"Horas")
 
-XLSX.writeFile(wb,"horas_"+usuario+"_"+mesSeleccionado+".xlsx")
+XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
 
 }
 
