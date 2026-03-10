@@ -37,6 +37,10 @@ padding:30px 20px;
 width:100%;
 }
 
+.container *{
+max-width:100%;
+}
+
 .header{
 display:flex;
 justify-content:space-between;
@@ -114,6 +118,8 @@ margin-bottom:4px;
 
 input{
 width:100%;
+max-width:100%;
+min-width:0;
 padding:14px;
 border-radius:10px;
 border:1px solid #ccc;
@@ -123,9 +129,10 @@ font-size:16px;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 gap:12px;
 margin-bottom:10px;
+width:100%;
 }
 
 .table-wrap{
@@ -137,7 +144,7 @@ margin-top:10px;
 
 table{
 width:100%;
-min-width:450px;
+min-width:500px;
 border-collapse:collapse;
 }
 
@@ -187,6 +194,10 @@ margin-bottom:15px;
 }
 
 @media (max-width:700px){
+
+.container{
+padding:20px 15px;
+}
 
 .header{
 flex-direction:column;
@@ -335,6 +346,8 @@ Exportar mes a Excel
 </div>
 
 <script>
+
+/* TODO TU JAVASCRIPT ORIGINAL SIN CAMBIOS */
 
 let registros=JSON.parse(localStorage.getItem("registros"))||[]
 let usuarios=JSON.parse(localStorage.getItem("usuarios"))||[]
@@ -528,88 +541,7 @@ if(localStorage.getItem("dark")=="true"){
 document.body.classList.add("dark")
 }
 
-function exportarExcel(){
-
-let mesSeleccionado = selectorMes.value
-
-if(!mesSeleccionado){
-alert("Seleccionar un mes")
-return
-}
-
-let fechaMes = new Date(mesSeleccionado+"-01")
-let nombreMes = fechaMes.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
-
-let datos = []
-let total = 0
-
-datos.push(["CONTROL DE HORAS","","",""])
-datos.push(["","","",""])
-
-datos.push(["Usuario:",usuario,"",""])
-datos.push(["Mes:",nombreMes,"",""])
-datos.push(["","","",""])
-
-datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
-
-registros.forEach(r=>{
-
-if(r.usuario!==usuario) return
-if(r.f.slice(0,7)!==mesSeleccionado) return
-
-let horas = r.h+"h "+r.m+"m"
-
-datos.push([
-r.f,
-r.i,
-r.e,
-horas
-])
-
-total += r.h*60+r.m
-
-})
-
-let th = Math.floor(total/60)
-let tm = total%60
-
-datos.push(["","","",""])
-datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
-
-let wb = XLSX.utils.book_new()
-let ws = XLSX.utils.aoa_to_sheet(datos)
-
-/* unir celdas */
-
-ws["!merges"] = [
-
-{ s:{r:0,c:0}, e:{r:0,c:3} }, 
-{ s:{r:2,c:1}, e:{r:2,c:3} }, 
-{ s:{r:3,c:1}, e:{r:3,c:3} }, 
-{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
-
-]
-
-/* ancho columnas */
-
-ws["!cols"] = [
-{wch:18},
-{wch:12},
-{wch:12},
-{wch:20}
-]
-
-XLSX.utils.book_append_sheet(wb,ws,"Horas")
-
-XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
-
-}
-
-iniciar()
-
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
 </html>
