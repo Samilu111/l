@@ -4,7 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Control de Horas</title>
 
@@ -21,20 +21,12 @@ max-width:100%;
 overflow-x:hidden;
 background:#f4f6fb;
 color:#111;
-transition:.3s;
-line-height:1.4;
-}
-
-.dark{
-background:#0f172a;
-color:white;
 }
 
 .container{
 max-width:1000px;
 margin:auto;
 padding:30px 20px;
-width:100%;
 }
 
 .header{
@@ -44,20 +36,6 @@ align-items:center;
 flex-wrap:wrap;
 gap:15px;
 margin-bottom:25px;
-width:100%;
-}
-
-h1{
-margin:0;
-font-size:24px;
-font-weight:700;
-}
-
-.actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-align-items:center;
 }
 
 button{
@@ -66,32 +44,11 @@ border:none;
 border-radius:10px;
 cursor:pointer;
 font-weight:600;
-font-size:14px;
-transition:.2s;
 }
 
-button:hover{
-opacity:.9;
-}
-
-.primary{
-background:#4f46e5;
-color:white;
-}
-
-.secondary{
-background:#e5e7eb;
-}
-
-.danger{
-background:#ef4444;
-color:white;
-}
-
-.dark .secondary{
-background:#334155;
-color:white;
-}
+.primary{background:#4f46e5;color:white;}
+.secondary{background:#e5e7eb;}
+.danger{background:#ef4444;color:white;}
 
 .card{
 background:white;
@@ -101,104 +58,59 @@ box-shadow:0 10px 25px rgba(0,0,0,0.08);
 margin-bottom:25px;
 }
 
-.dark .card{
-background:#1e293b;
-}
-
-label{
-font-weight:600;
-font-size:14px;
-display:block;
-margin-bottom:4px;
-}
-
-input{
-width:100%;
-padding:14px;
-border-radius:10px;
-border:1px solid #ccc;
-margin-bottom:12px;
-font-size:16px;
-}
-
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:12px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ccc;
 margin-bottom:10px;
 }
 
 .table-wrap{
-width:100%;
 overflow-x:auto;
--webkit-overflow-scrolling:touch;
-margin-top:10px;
 }
 
 table{
 width:100%;
-min-width:450px;
 border-collapse:collapse;
 }
 
 th,td{
-padding:12px;
+padding:10px;
 border-bottom:1px solid #ddd;
 text-align:center;
-font-size:14px;
-}
-
-.dark th,.dark td{
-border-bottom:1px solid #334155;
 }
 
 th{
 background:#f1f5f9;
-font-weight:600;
-}
-
-.dark th{
-background:#334155;
 }
 
 .total{
 text-align:right;
-font-weight:700;
-margin-top:15px;
-font-size:16px;
+font-weight:bold;
+margin-top:10px;
 }
 
-.center{
-max-width:420px;
-margin:auto;
-margin-top:120px;
-padding:25px;
+/* NO IMPRIMIR ACCIONES */
+
+@media print{
+
+.no-print{
+display:none;
 }
 
-.link{
-color:#4f46e5;
-cursor:pointer;
-font-weight:600;
+body{
+background:white;
 }
 
-h2{
-margin-top:0;
-margin-bottom:15px;
-}
-
-@media (max-width:700px){
-
-.header{
-flex-direction:column;
-align-items:flex-start;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
-button{
-width:100%;
+table{
+font-size:14px;
 }
 
 }
@@ -209,41 +121,37 @@ width:100%;
 
 <body>
 
-<div id="loginScreen" class="card center">
+<div id="loginScreen" class="card" style="max-width:400px;margin:100px auto">
 
 <h2>Iniciar sesión</h2>
 
-<label>Nombre</label>
-<input id="loginNombre">
-
-<label>Apellido</label>
-<input id="loginApellido">
+<input id="loginNombre" placeholder="Nombre">
+<input id="loginApellido" placeholder="Apellido">
 
 <button class="primary" onclick="login()">Entrar</button>
 
 <p>No tenés cuenta?
-<span class="link" onclick="mostrarRegistro()">Registrarse</span>
+<span onclick="mostrarRegistro()" style="color:blue;cursor:pointer">Registrarse</span>
 </p>
 
 </div>
 
-<div id="registerScreen" class="card center" style="display:none">
+
+<div id="registerScreen" class="card" style="display:none;max-width:400px;margin:100px auto">
 
 <h2>Crear cuenta</h2>
 
-<label>Nombre</label>
-<input id="regNombre">
-
-<label>Apellido</label>
-<input id="regApellido">
+<input id="regNombre" placeholder="Nombre">
+<input id="regApellido" placeholder="Apellido">
 
 <button class="primary" onclick="registrar()">Registrarse</button>
 
 <p>¿Ya tenés cuenta?
-<span class="link" onclick="mostrarLogin()">Iniciar sesión</span>
+<span onclick="mostrarLogin()" style="color:blue;cursor:pointer">Iniciar sesión</span>
 </p>
 
 </div>
+
 
 <div id="app" style="display:none">
 
@@ -253,19 +161,17 @@ width:100%;
 
 <h1>Control de Horas</h1>
 
-<div class="actions">
+<div>
 
 <span id="usuario"></span>
 
-<button class="secondary" onclick="toggleDark()">Modo</button>
-
-<button class="secondary" onclick="borrarPerfil()">Borrar Perfil</button>
-
+<button class="secondary" onclick="borrarPerfil()">Borrar perfil</button>
 <button class="danger" onclick="logout()">Salir</button>
 
 </div>
 
 </div>
+
 
 <div class="card">
 
@@ -273,20 +179,9 @@ width:100%;
 
 <div class="grid">
 
-<div>
-<label>Fecha</label>
 <input type="date" id="fecha">
-</div>
-
-<div>
-<label>Hora de ingreso</label>
 <input type="time" id="ingreso">
-</div>
-
-<div>
-<label>Hora de egreso</label>
 <input type="time" id="egreso">
-</div>
 
 </div>
 
@@ -294,24 +189,27 @@ width:100%;
 
 </div>
 
+
 <div class="card">
 
 <h3>Registros por mes</h3>
 
-<label>Seleccionar mes</label>
 <input type="month" id="selectorMes" onchange="mostrar()">
 
 <div class="table-wrap">
 
-<table>
+<table id="tablaPDF">
 
 <thead>
+
 <tr>
 <th>Fecha</th>
 <th>Ingreso</th>
 <th>Egreso</th>
 <th>Horas</th>
+<th class="no-print">Acción</th>
 </tr>
+
 </thead>
 
 <tbody id="tabla"></tbody>
@@ -324,15 +222,19 @@ width:100%;
 Total del mes: <span id="totalMes">0h 0m</span>
 </div>
 
-<button class="primary" onclick="exportarExcel()">
-Exportar mes a Excel
-</button>
+<br>
+
+<button class="primary no-print" onclick="exportarExcel()">Exportar Excel</button>
+
+<button class="primary no-print" onclick="imprimirPDF()">Exportar PDF</button>
 
 </div>
 
 </div>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
 
@@ -362,17 +264,11 @@ function registrar(){
 let n=cap(regNombre.value.trim())
 let a=cap(regApellido.value.trim())
 
-if(!n||!a){
-alert("Completar datos")
-return
-}
+if(!n||!a)return alert("Completar datos")
 
 let nombre=n+" "+a
 
-if(usuarios.includes(nombre)){
-alert("Ese usuario ya existe")
-return
-}
+if(usuarios.includes(nombre))return alert("Usuario existe")
 
 usuarios.push(nombre)
 
@@ -391,10 +287,7 @@ let a=cap(loginApellido.value.trim())
 
 let nombre=n+" "+a
 
-if(!usuarios.includes(nombre)){
-alert("Usuario no registrado")
-return
-}
+if(!usuarios.includes(nombre))return alert("Usuario no registrado")
 
 usuario=nombre
 
@@ -438,10 +331,7 @@ let f=fecha.value
 let i=ingreso.value
 let e=egreso.value
 
-if(!f||!i||!e){
-alert("Completar datos")
-return
-}
+if(!f||!i||!e)return alert("Completar datos")
 
 let diff=minutos(e)-minutos(i)
 
@@ -453,10 +343,6 @@ let m=diff%60
 registros.push({usuario,f,i,e,h,m})
 
 localStorage.setItem("registros",JSON.stringify(registros))
-
-fecha.value=""
-ingreso.value=""
-egreso.value=""
 
 mostrar()
 
@@ -470,21 +356,24 @@ let total=0
 
 let mesSeleccionado=selectorMes.value
 
-registros.forEach((r)=>{
+registros.forEach((r,index)=>{
 
 if(r.usuario!==usuario)return
 
-let mesRegistro=r.f.slice(0,7)
-
-if(mesRegistro!==mesSeleccionado)return
+if(r.f.slice(0,7)!==mesSeleccionado)return
 
 let tr=document.createElement("tr")
 
 tr.innerHTML=`
+
 <td>${r.f}</td>
 <td>${r.i}</td>
 <td>${r.e}</td>
 <td>${r.h}h ${r.m}m</td>
+<td class="no-print">
+<button class="danger" onclick="borrarRegistro(${index})">🗑</button>
+</td>
+
 `
 
 tabla.appendChild(tr)
@@ -500,9 +389,21 @@ totalMes.innerText=th+"h "+tm+"m"
 
 }
 
+function borrarRegistro(i){
+
+if(!confirm("¿Borrar registro?"))return
+
+registros.splice(i,1)
+
+localStorage.setItem("registros",JSON.stringify(registros))
+
+mostrar()
+
+}
+
 function borrarPerfil(){
 
-if(confirm("¿Seguro que querés eliminar tu cuenta?\nSe borrarán todos tus registros.")){
+if(confirm("¿Eliminar cuenta y registros?")){
 
 usuarios=usuarios.filter(u=>u!==usuario)
 registros=registros.filter(r=>r.usuario!==usuario)
@@ -516,88 +417,23 @@ logout()
 
 }
 
-function toggleDark(){
-
-document.body.classList.toggle("dark")
-
-localStorage.setItem("dark",document.body.classList.contains("dark"))
-
-}
-
-if(localStorage.getItem("dark")=="true"){
-document.body.classList.add("dark")
-}
-
 function exportarExcel(){
 
 let mesSeleccionado = selectorMes.value
 
-if(!mesSeleccionado){
-alert("Seleccionar un mes")
-return
-}
-
-let fechaMes = new Date(mesSeleccionado+"-01")
-let nombreMes = fechaMes.toLocaleDateString("es-ES",{month:"long",year:"numeric"})
-
-let datos = []
-let total = 0
-
-datos.push(["CONTROL DE HORAS","","",""])
-datos.push(["","","",""])
-
-datos.push(["Usuario:",usuario,"",""])
-datos.push(["Mes:",nombreMes,"",""])
-datos.push(["","","",""])
-
-datos.push(["Fecha","Ingreso","Egreso","Horas trabajadas"])
+let datos=[["Fecha","Ingreso","Egreso","Horas"]]
 
 registros.forEach(r=>{
 
-if(r.usuario!==usuario) return
-if(r.f.slice(0,7)!==mesSeleccionado) return
+if(r.usuario!==usuario)return
+if(r.f.slice(0,7)!==mesSeleccionado)return
 
-let horas = r.h+"h "+r.m+"m"
-
-datos.push([
-r.f,
-r.i,
-r.e,
-horas
-])
-
-total += r.h*60+r.m
+datos.push([r.f,r.i,r.e,r.h+"h "+r.m+"m"])
 
 })
 
-let th = Math.floor(total/60)
-let tm = total%60
-
-datos.push(["","","",""])
-datos.push(["TOTAL HORAS DEL MES","","",th+"h "+tm+"m"])
-
-let wb = XLSX.utils.book_new()
-let ws = XLSX.utils.aoa_to_sheet(datos)
-
-/* unir celdas */
-
-ws["!merges"] = [
-
-{ s:{r:0,c:0}, e:{r:0,c:3} }, 
-{ s:{r:2,c:1}, e:{r:2,c:3} }, 
-{ s:{r:3,c:1}, e:{r:3,c:3} }, 
-{ s:{r:datos.length-1,c:0}, e:{r:datos.length-1,c:2} }
-
-]
-
-/* ancho columnas */
-
-ws["!cols"] = [
-{wch:18},
-{wch:12},
-{wch:12},
-{wch:20}
-]
+let wb=XLSX.utils.book_new()
+let ws=XLSX.utils.aoa_to_sheet(datos)
 
 XLSX.utils.book_append_sheet(wb,ws,"Horas")
 
@@ -605,11 +441,15 @@ XLSX.writeFile(wb,"horas_"+mesSeleccionado+".xlsx")
 
 }
 
+function imprimirPDF(){
+
+window.print()
+
+}
+
 iniciar()
 
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
 </html>
